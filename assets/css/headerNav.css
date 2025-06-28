@@ -1,0 +1,22 @@
+header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 100px;
+	width: 100%;
+}
+
+.header-nav__list-item button {
+	background-color: transparent;
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 10px 20px;
+	cursor: pointer;
+	transition: transform 0.3s ease;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.list-item__btn-delete-user:hover {
+	transform: scale(1.1);
+}
