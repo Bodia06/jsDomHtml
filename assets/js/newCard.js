@@ -61,32 +61,31 @@ class Card {
 		e.stopPropagation()
 	}
 
-	render() {
-		const { title, headerBgSrc, category, body, date } = this._news
-
-		const newCardContainer = document.createElement('div')
-		newCardContainer.classList.add('new-card__container')
-
-		const newCardList = document.createElement('ul')
-		newCardList.classList.add('new-card__list')
-
-		const newCardListItem = document.createElement('li')
-		newCardListItem.classList.add('new-card__list-item')
-
-		newCardListItem.newCardInstance = this
-
+	newCardHeader(title, headerBgSrc, category) {
 		const newCardHeader = document.createElement('div')
 		newCardHeader.classList.add('new-card__header')
+		newCardHeader.appendChild(this.createHeaderBg(headerBgSrc, category))
+		newCardHeader.appendChild(this.createTitle(title))
+		newCardHeader.appendChild(this.createHeart())
+		return newCardHeader
+	}
 
+	createHeaderBg(headerBgSrc, category) {
 		const newCardHeaderBg = document.createElement('img')
 		newCardHeaderBg.classList.add('new-card__header-bg')
 		newCardHeaderBg.src = headerBgSrc
 		newCardHeaderBg.alt = `Image for ${category}`
+		return newCardHeaderBg
+	}
 
+	createTitle(title) {
 		const newCardHeaderTitle = document.createElement('h2')
 		newCardHeaderTitle.classList.add('new-card__header-title')
 		newCardHeaderTitle.textContent = title
+		return newCardHeaderTitle
+	}
 
+	createHeart() {
 		const newCardHeaderHeartContainer = document.createElement('div')
 		newCardHeaderHeartContainer.classList.add(
 			'new-card__header-heart-container'
@@ -106,47 +105,79 @@ class Card {
 		newCardHeaderHeart.addEventListener('click', (e) => this.activeFavorite(e))
 
 		newCardHeaderHeartContainer.appendChild(newCardHeaderHeart)
-		newCardHeader.appendChild(newCardHeaderBg)
-		newCardHeader.appendChild(newCardHeaderTitle)
-		newCardHeader.appendChild(newCardHeaderHeartContainer)
+		return newCardHeaderHeartContainer
+	}
 
+	createCardInfo(category, body, date) {
 		const newCardInfo = document.createElement('div')
 		newCardInfo.classList.add('new-card__info')
 
+		newCardInfo.appendChild(this.createInfoCategory(category))
+		newCardInfo.appendChild(this.createInfoText(body))
+		newCardInfo.appendChild(this.createInfoPublished(date))
+		return newCardInfo
+	}
+
+	createInfoCategory(category) {
 		const newCardInfoCategory = document.createElement('h3')
 		newCardInfoCategory.classList.add('new-card__info-category')
 		newCardInfoCategory.textContent = category
+		return newCardInfoCategory
+	}
 
+	createInfoText(body) {
 		const newCardInfoText = document.createElement('p')
 		newCardInfoText.classList.add('new-card__info-text')
 		newCardInfoText.textContent = body
+		return newCardInfoText
+	}
 
+	createInfoPublished(date) {
 		const newCardInfoPublished = document.createElement('p')
 		newCardInfoPublished.classList.add('new-card__info-published')
 		newCardInfoPublished.textContent = date
+		return newCardInfoPublished
+	}
 
-		newCardInfo.appendChild(newCardInfoCategory)
-		newCardInfo.appendChild(newCardInfoText)
-		newCardInfo.appendChild(newCardInfoPublished)
+	createListNewCard(title, headerBgSrc, category, body, date) {
+		const newCardList = document.createElement('ul')
+		newCardList.classList.add('new-card__list')
 
-		newCardListItem.appendChild(newCardHeader)
-		newCardListItem.appendChild(newCardInfo)
+		const newCardListItem = document.createElement('li')
+		newCardListItem.classList.add('new-card__list-item')
 
+		newCardListItem.newCardInstance = this
+
+		newCardListItem.appendChild(
+			this.newCardHeader(title, headerBgSrc, category)
+		)
+		newCardListItem.appendChild(this.createCardInfo(category, body, date))
 		newCardListItem.addEventListener('click', (e) => this.activeCard(e))
-
 		newCardList.appendChild(newCardListItem)
-		newCardContainer.appendChild(newCardList)
+		return newCardList
+	}
+
+	createNewCardContainer() {
+		const { title, headerBgSrc, category, body, date } = this._news
+
+		const newCardContainer = document.createElement('div')
+		newCardContainer.classList.add('new-card__container')
+
+		newCardContainer.appendChild(
+			this.createListNewCard(title, headerBgSrc, category, body, date)
+		)
 
 		const newCardGlobalContainer = document.querySelector(
-			'.nwewCard__global-container'
+			'.newCard__global-container'
 		)
+
 		newCardGlobalContainer.appendChild(newCardContainer)
 	}
 }
 
 news.forEach((newsItem) => {
 	const card = new Card(newsItem)
-	card.render()
+	card.createNewCardContainer()
 })
 
 const btnDeleteNewCard = document.querySelector('.list-item__btn-delete-user')
